@@ -1,0 +1,19 @@
+name: Build
+
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Theos
+        run: |
+          git clone --recursive https://github.com/theos/theos.git $HOME/theos
+      - name: Build tweak
+        run: |
+          make clean package
+      - uses: actions/upload-artifact@v2
+        with:
+          name: output
+          path: ./
