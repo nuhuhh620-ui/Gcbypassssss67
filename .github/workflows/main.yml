@@ -6,15 +6,32 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+
       - name: Install Theos
         run: |
           git clone --recursive https://github.com/theos/theos.git $HOME/theos
+          echo "THEOS=$HOME/theos" >> $GITHUB_ENV
+          echo "$HOME/theos/bin" >> $GITHUB_PATH
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential dpkg-dev ruby clang lld perl pkg-config git curl unzip
+
+      # If your Makefile is NOT at the repo root, set working-directory to the folder that contains it:
+      # - name: Build tweak
+      #   working-directory: path/to/your/project
       - name: Build tweak
         run: |
-          make clean package
+          set -e
+          make clean
+          make package
+
       - name: Upload build output
         uses: actions/upload-artifact@v4
         with:
           name: output
-          path: ./
+          # Upload only packages (.deb). Adjust path if your package output location differs.
+          path: ./packages/*.deb
