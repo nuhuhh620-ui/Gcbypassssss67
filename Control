@@ -1,0 +1,7 @@
+Package: com.gc.bypass
+Name: GCBypass
+Version: 1.0
+Architecture: iphoneos-arm
+Description: Cancel Game Center auth
+Maintainer: You
+Author: You
